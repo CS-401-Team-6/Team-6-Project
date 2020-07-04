@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+package project;
 
 public class User 
 {
@@ -6,27 +6,11 @@ public class User
     private String password;
     private int bank;
     
-    private static ArrayList<String> UserList = new ArrayList<String>();
-    private static ArrayList<User> UserInfo = new ArrayList<User>();
-    
     public User(String usn, String pass)
     {
         this.setBank(100);
         this.setPassword(pass);
         this.setUsername(usn);
-    }
-    
-    public boolean checkUsername(String usn)
-    {
-    	usn = usn.toUpperCase();
-    	if(UserList.contains(usn))
-    	{
-    		return false;
-    	}
-    	else
-    	{
-    		return true;
-    	}
     }
     
     public void setUsername(String usn)
@@ -57,6 +41,5 @@ public class User
     public int getBank()
     {
     	return this.bank;
-    }
-    
+    }   
 }
