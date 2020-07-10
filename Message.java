@@ -1,8 +1,8 @@
 import java.io.Serializable;
 
 public class Message implements Serializable{
-	//Messages will be defined as actions to be sent between client and server
-	//Depending on the type of message, a different action will be processed through MessageProcessor
+	//Messages will be defined as actions to be sent between client and server.
+	//Depending on the type of message, a different action will be processed through MessageProcessor.
 	
     protected String type;
     protected String status;
