@@ -13,8 +13,10 @@ public class Deck
     	{
     		for(Card.VALUE value : Card.VALUE.values())
     		{
-    			String pic = suit.toString() + value.toString();
+    			String pic = "";
     			Card card = new Card(suit, value, pic);
+    			pic = card.valueToString() + suit.toString() + ".png";
+    			card.setPic(pic);
     			this.addCard(card);
     		}
     	}
