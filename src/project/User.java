@@ -1,3 +1,4 @@
+package project;
 public class User 
 {
     private String username;
@@ -32,7 +33,11 @@ public class User
     	this.bank = money;
     }
     
-    public String getUsername()
+    public void setHand(Hand hand) {
+		this.hand = hand;
+	}
+
+	public String getUsername()
     {
     	return this.username;
     }

@@ -1,3 +1,4 @@
+package project;
 public class Card 
 {
 	private VALUE value;
