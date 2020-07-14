@@ -28,6 +28,7 @@ public class Signup {
 	private int numofcus;
 	private String usid, bank;
 	private String psd;
+	private byte[] psdbyte;
 	private User[] customerarray;
 	private User rguser;
 	private boolean add;
@@ -106,14 +107,15 @@ public class Signup {
 				add = false;
 				usid = rgusid.getText();
 				psd = rgpassw.getText();
+				psdbyte = psd.getBytes();
 				rguser.setUsername(usid);
-				rguser.setPassword(psd);
+				rguser.setPassword(psdbyte);
 				rguser.setBank(10000);
 				
 				add = addCustomer(usid,psd,bank);
 				if(add == true)
 				{
-					JOptionPane.showMessageDialog(frame, "Free Credit $" + bank + "!");
+					JOptionPane.showMessageDialog(frame, "Congratulations! You got free credit $" + bank + "!");
 					save(rguser);
 					frame.setVisible(false);
 				}
@@ -181,6 +183,8 @@ public class Signup {
 	public boolean addCustomer(String id, String password, String bankc)
 	{
 		bankc = "10000";
+		byte[] temppsw;
+		temppsw = password.getBytes();
 		int bk = 0, oldcus = 0;
 		char ch = 0;
 		boolean numberFlag = false, capitalFlag = false, lowerCaseFlag = false;
@@ -205,7 +209,7 @@ public class Signup {
 		{
 			
 			temp.setUsername(id);
-			temp.setPassword(password);
+			temp.setPassword(temppsw);
 			bk = Integer.parseInt(bankc);
 			temp.setBank(bk);
 			
@@ -269,7 +273,7 @@ public class Signup {
 			}
 			User[] temparray = new User[doublesize];
 			temp.setUsername(id);
-			temp.setPassword(password);
+			temp.setPassword(temppsw);
 			bk = Integer.parseInt(bankc);
 			temp.setBank(bk);
 			temparray = Arrays.copyOf(customerarray, doublesize);
@@ -329,7 +333,7 @@ public class Signup {
 			    	  cuswriter.write(newuser.getUsername() + "," + newuser.getPassword() + "," + newuser.getBank() + "\n");
 			     
 			      cuswriter.close();
-			      JOptionPane.showMessageDialog(frame, "Success!");
+			      JOptionPane.showMessageDialog(frame, "Register Successful!");
 			    } catch (IOException e) {
 			    	JOptionPane.showMessageDialog(frame, "Error 404");
 			      e.printStackTrace();

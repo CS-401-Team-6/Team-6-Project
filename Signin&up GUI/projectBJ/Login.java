@@ -28,6 +28,7 @@ public class Login {
 	private User[] customerarray;
 	private String newuserid;
 	private Signup userrg;
+	private byte[] psw;
 
 
 	/**
@@ -87,6 +88,9 @@ public class Login {
 				
 				String usid = username.getText();
 				String psd = password.getText();
+				psw = psd.getBytes();
+				
+				// add client login here
 				
 				if(usid.equals("name") && psd.equals("aa"))
 				{
