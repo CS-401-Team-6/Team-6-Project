@@ -52,7 +52,7 @@ public class Signup {
 	 * Create the application.
 	 */
 	public Signup() {
-		rguser = new User(null, null, 1000);
+		rguser = new User(null, null, 10000);
 		usid = null;
 		psd = null;
 		numofcus = 0;
