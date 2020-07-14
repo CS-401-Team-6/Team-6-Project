@@ -1,11 +1,11 @@
 public class User 
 {
     private String username;
-    private Byte[] password;
+    private byte[] password;
     private int bank;
     private Hand hand;
     
-    public User(String usn, Byte[] pass)
+    public User(String usn, byte[] pass)
     {
         this.setBank(10000);
         this.setPassword(pass);
@@ -22,7 +22,7 @@ public class User
     	this.username = usn;
     }
     
-    public void setPassword(Byte[] pass)
+    public void setPassword(byte[] pass)
     {
     	this.password = pass;
     }
@@ -48,12 +48,17 @@ public class User
     	}
     }
     
+    public void setHand(Hand hand)
+    {
+    	this.hand = hand;
+    }
+    
     public String getUsername()
     {
     	return this.username;
     }
     
-    public Byte[] getPassword()
+    public byte[] getPassword()
     {
     	return this.password;
     }
