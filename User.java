@@ -1,4 +1,5 @@
-package project;
+package projectBJ;
+
 
 public class User 
 {
@@ -6,9 +7,9 @@ public class User
     private String password;
     private int bank;
     
-    public User(String usn, String pass)
+    public User(String usn, String pass, int bank)
     {
-        this.setBank(100);
+        this.setBank(bank);
         this.setPassword(pass);
         this.setUsername(usn);
     }
