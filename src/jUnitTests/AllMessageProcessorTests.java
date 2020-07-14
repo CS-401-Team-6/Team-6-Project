@@ -5,7 +5,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 @RunWith(Suite.class)
-@SuiteClasses({ MessageProcessor_DoubleDownTest.class, MessageProcessor_ProcessHitTest.class,
+@SuiteClasses({ MessageProcessor_DoubleDownTest.class, MessageProcessor_HitTest.class,
 		MessageProcessor_SplitTest.class, MessageProcessor_StandTest.class })
 public class AllMessageProcessorTests {
 

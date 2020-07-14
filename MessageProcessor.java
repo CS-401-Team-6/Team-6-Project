@@ -1,5 +1,3 @@
-package project;
-
 import java.io.ObjectOutputStream;
 
 public class MessageProcessor {
@@ -10,7 +8,7 @@ public class MessageProcessor {
 	public Message process(Message message, User user, Deck deck) {
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
-			user.getHand().hit(deck.topDrawCard());
+			user.hand.hit();
 			message.setStatus("Success");
 		}
 		else if (message.getType().equals("STAND")) {
@@ -19,7 +17,7 @@ public class MessageProcessor {
 		}
 		else if (message.getType().equals("BET")) {
 			//Creates a bet for the user's hand
-			user.setBet(Integer.parseInt(message.getText()));
+			user.setBet(Integer.parseInt(message.getText());
 			message.setStatus("Success");
 		}
 		else
