@@ -48,6 +48,11 @@ public class Deck
     	this.deck.add(card);
     }
     
+    public ArrayList<Card> getDeck()
+    {
+    	return this.deck;
+    }
+    
     //shuffles the deck
     public void shuffle()
     {
@@ -64,8 +69,4 @@ public class Deck
     	this.deck = temp;
     }
     
-    public ArrayList<Card> getDeck()
-    {
-    	return this.deck;
-    }
 }
