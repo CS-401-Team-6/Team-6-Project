@@ -8,17 +8,17 @@ public class MessageProcessor {
 	public Message process(Message message, User user, Deck deck) {
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
-			user.hand.hit();
-			message.setStatus("Success");
+			user.getHand().hit(deck.topDrawCard());
+			message.setStatus("HitSuccess");
 		}
 		else if (message.getType().equals("STAND")) {
 			//Do nothing
-			message.setStatus("Success");
+			message.setStatus("StandSuccess");
 		}
 		else if (message.getType().equals("BET")) {
 			//Creates a bet for the user's hand
-			user.setBet(Integer.parseInt(message.getText());
-			message.setStatus("Success");
+			user.setBet(Integer.parseInt(message.getText()));
+			message.setStatus("BetSuccess");
 		}
 		else
 			System.out.println("INVALID ACTION");
