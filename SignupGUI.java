@@ -52,11 +52,11 @@ public class Signup {
 	 * Create the application.
 	 */
 	public Signup() {
-		rguser = new User(null, null, 10000);
+		rguser = new User(null, null);
 		usid = null;
 		psd = null;
 		numofcus = 0;
-		bank = "1000";
+		bank = "10000";
 		customerarray = new User[100];
 		add = false;
 		initialize();
@@ -108,9 +108,12 @@ public class Signup {
 				psd = rgpassw.getText();
 				rguser.setUsername(usid);
 				rguser.setPassword(psd);
+				rguser.setBank(10000);
+				
 				add = addCustomer(usid,psd,bank);
 				if(add == true)
 				{
+					JOptionPane.showMessageDialog(frame, "Free Credit $" + bank + "!");
 					save(rguser);
 					frame.setVisible(false);
 				}
@@ -177,11 +180,15 @@ public class Signup {
 	
 	public boolean addCustomer(String id, String password, String bankc)
 	{
+		bankc = "10000";
 		int bk = 0, oldcus = 0;
 		char ch = 0;
 		boolean numberFlag = false, capitalFlag = false, lowerCaseFlag = false;
 		boolean newcus = true;
-		User temp = new User(null, null, 0);
+		User temp = new User(null, null);
+		bk = Integer.parseInt(bankc);
+		
+		temp.setBank(bk);
 
 		
 		for(int i = 0; i < numofcus; i++)
@@ -249,7 +256,7 @@ public class Signup {
 		}
 		else if(newcus == false )
 		{
-			JOptionPane.showMessageDialog(frame, "This username has been registered");
+			JOptionPane.showMessageDialog(frame, "This username has been registered...");
 			return newcus;
 			
 		}
@@ -336,7 +343,7 @@ public class Signup {
 			    	  cuswriter.write(newuser.getUsername() + "," + newuser.getPassword() + "," + newuser.getBank() + "\n");
 			    
 			      cuswriter.close();
-			      JOptionPane.showMessageDialog(frame, "Success!");
+			      JOptionPane.showMessageDialog(frame, "Register Successful!");
 			    } catch (IOException e) {
 			    	JOptionPane.showMessageDialog(frame, "Error 404");
 			      e.printStackTrace();

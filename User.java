@@ -7,7 +7,7 @@ public class User
     private String password;
     private int bank;
     
-    public User(String usn, String pass, int bank)
+    public User(String usn, String pass)
     {
         this.setBank(bank);
         this.setPassword(pass);
