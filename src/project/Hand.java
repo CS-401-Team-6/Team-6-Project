@@ -1,10 +1,12 @@
 package project;
+
 import java.util.ArrayList;
 
 public class Hand 
 {
 	private ArrayList<Card> cards = new ArrayList<Card>();
 	private int score;
+	private int bet;
 	
 	//fist card will be facedown, second is faceup
 	public Hand()
@@ -93,6 +95,22 @@ public class Hand
 	{
 		this.score = 0;
 	}
+	
+	public void setBet(int bet)
+	{
+		this.bet = bet;
+	}
+	
+	public void resetBet()
+	{
+		this.bet = 0;
+	}
+
+	public int getBet()
+	{
+		return this.bet;
+	}
+	
 	
 	public int getScore()
 	{

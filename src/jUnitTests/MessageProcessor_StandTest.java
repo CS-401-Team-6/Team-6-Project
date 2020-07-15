@@ -10,7 +10,8 @@ public class MessageProcessor_StandTest {
 	public void test() {
 		//fail("Not yet implemented");
 		Message message = new Message("STAND", "Waiting", "StandMessage");
-		User user = new User("username", "password");
+		byte arr[] = new byte[] {'p', 'a', 's', 's'};
+		User user = new User("username", arr);
 		Hand hand = new Hand();
 		user.setHand(hand);
 		Deck deck = new Deck();

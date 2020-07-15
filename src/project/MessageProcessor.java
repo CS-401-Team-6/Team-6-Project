@@ -11,16 +11,16 @@ public class MessageProcessor {
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
 			user.getHand().hit(deck.topDrawCard());
-			message.setStatus("Success");
+			message.setStatus("HitSuccess");
 		}
 		else if (message.getType().equals("STAND")) {
 			//Do nothing
-			message.setStatus("Success");
+			message.setStatus("StandSuccess");
 		}
 		else if (message.getType().equals("BET")) {
 			//Creates a bet for the user's hand
 			user.setBet(Integer.parseInt(message.getText()));
-			message.setStatus("Success");
+			message.setStatus("BetSuccess");
 		}
 		else
 			System.out.println("INVALID ACTION");

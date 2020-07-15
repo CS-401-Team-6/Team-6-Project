@@ -1,12 +1,13 @@
 package project;
+
 public class User 
 {
     private String username;
-    private String password;
+    private byte[] password;
     private int bank;
     private Hand hand;
     
-    public User(String usn, String pass)
+    public User(String usn, byte[] pass)
     {
         this.setBank(10000);
         this.setPassword(pass);
@@ -23,7 +24,7 @@ public class User
     	this.username = usn;
     }
     
-    public void setPassword(String pass)
+    public void setPassword(byte[] pass)
     {
     	this.password = pass;
     }
@@ -33,16 +34,33 @@ public class User
     	this.bank = money;
     }
     
-    public void setHand(Hand hand) {
-		this.hand = hand;
-	}
-
-	public String getUsername()
+    public void setBet(int b)
+    {
+    	if(b > this.bank)
+    	{
+    		this.hand.setBet(this.bank);
+    	}
+    	else if(b < 0)
+    	{
+    		this.hand.setBet(0);
+    	}
+    	else
+    	{
+    		this.hand.setBet(b);
+    	}
+    }
+    
+    public void setHand(Hand hand)
+    {
+    	this.hand = hand;
+    }
+    
+    public String getUsername()
     {
     	return this.username;
     }
     
-    public String getPassword()
+    public byte[] getPassword()
     {
     	return this.password;
     }
@@ -51,6 +69,11 @@ public class User
     {
     	return this.bank;
     }  
+    
+    public int getBet()
+    {
+    	return this.hand.getBet();
+    }
     
     public Hand getHand()
     {

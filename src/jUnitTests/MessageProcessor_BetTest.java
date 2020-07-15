@@ -16,13 +16,14 @@ public class MessageProcessor_BetTest {
 	public void test() {
 		//fail("Not yet implemented");
 		Message message = new Message("BET", "Waiting", "100");
-		User user = new User("username", "password");
+		byte arr[] = new byte[] {'p', 'a', 's', 's'};
+		User user = new User("username", arr);
 		Hand hand = new Hand();
 		user.setHand(hand);
 		Deck deck = new Deck();
 		MessageProcessor mp = new MessageProcessor();
 		mp.process(message, user, deck);
-		assertEquals("StandSuccess" ,message.getStatus());
+		assertEquals("BetSuccess" ,message.getStatus());
 	}
 
 }
