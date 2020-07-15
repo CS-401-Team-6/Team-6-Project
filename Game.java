@@ -1,3 +1,4 @@
+package server;
 import java.util.ArrayList;
 
 public class Game 
@@ -5,11 +6,13 @@ public class Game
     private Deck deck;
     private Dealer dealer;
     private ArrayList<User> players = new ArrayList<User>();
+    private int numPlayers;
     
     public Game()
     {
     	deck = new Deck();
-    	dealer = new Dealer();
+    	dealer = new Dealer();   
+    	numPlayers = 0;
     }
     
     public Deck getDeck()
@@ -26,4 +29,13 @@ public class Game
     {
     	return this.players;
     }
+    
+    //ADDED: MM
+    //IS FULL
+    public boolean isFull()
+    {
+    	return (numPlayers >= 4);
+    }
+    
+    
 }

@@ -1,3 +1,4 @@
+package server;
 public class Card 
 {
 	private VALUE value;
