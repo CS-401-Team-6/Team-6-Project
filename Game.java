@@ -30,6 +30,8 @@ public class Game
     	return this.players;
     }
     
+ 
+    
     //ADDED: MM
     //IS FULL
     public boolean isFull()
@@ -37,5 +39,10 @@ public class Game
     	return (numPlayers >= 4);
     }
     
+    public void addPlayer(User user)
+    {
+    	players.add(user);
+    	return;
+    }
     
 }
