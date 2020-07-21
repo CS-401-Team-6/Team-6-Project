@@ -4,6 +4,7 @@ public class User
     private byte[] password;
     private int bank;
     private Hand hand;
+    private STATUS status;
     
     public User(String usn, byte[] pass)
     {
@@ -53,6 +54,10 @@ public class User
     	this.hand = hand;
     }
     
+    public void setStatus(STATUS s) {
+    	this.status = s;
+    }
+    
     public int calculateScore()
     {
     	this.hand.calculateScore();
@@ -82,5 +87,9 @@ public class User
     public Hand getHand()
     {
     	return this.hand;
+    }
+    
+    public STATUS getStatus() {
+    	return this.status;
     }
 }

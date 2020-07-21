@@ -21,9 +21,16 @@ public class Game
     {
     	return this.dealer;
     }
-    
+
     public ArrayList<User> getPlayers()
     {
     	return this.players;
+    }
+    
+    public User activePlayer() {
+    	for (int i = 0; i < players.size(); i++) {
+    		if (players.get(i).getStatus().equals(STATUS.ACTIVE))
+    			return players.get(i);
+    	}
     }
 }

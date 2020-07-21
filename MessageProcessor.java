@@ -1,5 +1,3 @@
-import java.io.ObjectOutputStream;
-
 public class MessageProcessor {
 	//This class will take in a message and depending on the type,
 	//process will perform different actions within the server
@@ -28,12 +26,11 @@ public class MessageProcessor {
 			//Also triggers a newRound = true boolean to let players into the game
 		int index = game.getPlayers().indexOf(game.activePlayer() + 1);
 		if (index >= 0 && index <= 4)
-			game.setActivePlayer(game.getPlayers().get(index));
+			game.getPlayers().get(index).setStatus(STATUS.ACTIVE);
 		if (game.activePlayer().equals(game.getPlayers().get(game.getPlayers().size() - 1))) {
 			game.setActivePlayer(game.getPlayers().get(0));
 			game.setNewRound(true);
 		}
-		
 		message.setGame(game);
 		return message;
 	}
