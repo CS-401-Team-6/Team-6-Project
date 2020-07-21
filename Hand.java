@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import project.Card;
+
 public class Hand 
 {
 	private ArrayList<Card> cards = new ArrayList<Card>();
@@ -119,5 +121,10 @@ public class Hand
 	public int getNumber()
 	{
 		return this.cards.size();
+	}
+	
+	public ArrayList<Card> getCards()
+	{
+		return this.cards;
 	}
 }
