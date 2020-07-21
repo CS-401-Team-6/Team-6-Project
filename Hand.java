@@ -41,6 +41,7 @@ public class Hand
 			if(v == 1)
 			{
 				ace++;
+				continue;
 			}
 			this.score += v;
 		}
