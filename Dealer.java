@@ -4,7 +4,7 @@ public class Dealer
     
     public Dealer()
     {
-    	//theres really nothing to do here
+    	this.hand = new Hand();
     }
     
     public void hit(Card card)
