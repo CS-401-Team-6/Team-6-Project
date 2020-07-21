@@ -13,7 +13,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.net.Socket;
 import java.awt.event.ActionEvent;
+import javax.swing.JTextArea;
 
 public class gametable extends JFrame {
 
@@ -22,21 +26,35 @@ public class gametable extends JFrame {
 	private JTextField Dealercards;
 	private JTextField P1Cards;
 	private JTextField P2Cards;
+	static JTextArea msg_area;
+	static Socket s;
+	static DataInputStream din;
+	static DataOutputStream dout;
 
 	/**
 	 * Launch the application.
 	 */
+	
+	
 	public static void main(String[] args) {                  // connect to the other class just delete String[] args etc.
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
-				try {
-					gametable frame = new gametable();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				new gametable().setVisible(true);
 			}
 		});
+		try {
+			s = new Socket("localhost", 5555);
+			din = new DataInputStream(s.getInputStream());
+			dout = new DataOutputStream(s.getOutputStream());
+			String msgin = "";
+			while(!msgin.equals("exit"))
+			{
+				msgin = din.readUTF();
+				msg_area.setText(msg_area.getText().trim()+ "\n Server:\t" + msgin);
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -223,5 +241,10 @@ public class gametable extends JFrame {
 		cardpng11.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
 		cardpng11.setBounds(781, 324, 38, 216);
 		contentPane.add(cardpng11);
+		
+		msg_area = new JTextArea();
+		msg_area.setText("The card you drawn is ..."); // update message
+		msg_area.setBounds(10, 392, 263, 148);
+		contentPane.add(msg_area);
 	}
 }
