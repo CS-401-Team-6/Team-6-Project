@@ -1,3 +1,7 @@
+import java.util.ArrayList;
+
+import project.Card;
+
 public class User 
 {
     private String username;
@@ -101,7 +105,13 @@ public class User
     	return this.hand;
     }
     
-    public boolean getStatus() {
+	public ArrayList<Card> getCards()
+	{
+		return this.hand.getCards();
+	} 
+    
+    public boolean getStatus() 
+    {
     	return this.status;
     }
 }
