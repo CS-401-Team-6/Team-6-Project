@@ -171,42 +171,57 @@ public class gametable extends JFrame {
 		JLabel cardpng1 = new JLabel("New label");
 		cardpng1.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));  // Change card image here
 		cardpng1.setBackground(new Color(255, 255, 255));
-		cardpng1.setBounds(301, 324, 59, 216);
+		cardpng1.setBounds(301, 324, 38, 216);
 		contentPane.add(cardpng1);
 		
 		JLabel cardpng2 = new JLabel("New label");
 		cardpng2.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png"))); // Change card image here
-		cardpng2.setBounds(371, 324, 59, 216);
+		cardpng2.setBounds(349, 324, 38, 216);
 		contentPane.add(cardpng2);
 		
 		JLabel cardpng3 = new JLabel("New label");
 		cardpng3.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png"))); // Change card image here
-		cardpng3.setBounds(440, 324, 59, 216);
+		cardpng3.setBounds(397, 324, 38, 216);
 		contentPane.add(cardpng3);
 		
 		JLabel cardpng4 = new JLabel("New label");
 		cardpng4.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png"))); // Change card image here
-		cardpng4.setBounds(509, 324, 59, 216);
+		cardpng4.setBounds(445, 324, 38, 216);
 		contentPane.add(cardpng4);
 		
 		JLabel cardpng5 = new JLabel("New label");
 		cardpng5.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
-		cardpng5.setBounds(583, 324, 59, 216);
+		cardpng5.setBounds(493, 324, 38, 216);
 		contentPane.add(cardpng5);
 		
 		JLabel cardpng6 = new JLabel("New label");
 		cardpng6.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
-		cardpng6.setBounds(651, 324, 59, 216);
+		cardpng6.setBounds(541, 324, 38, 216);
 		contentPane.add(cardpng6);
 		
 		JLabel cardpng7 = new JLabel("New label");
 		cardpng7.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
-		cardpng7.setBounds(723, 324, 59, 216);
+		cardpng7.setBounds(589, 324, 38, 216);
 		contentPane.add(cardpng7);
 		
 		JLabel cardpng8 = new JLabel("New label");
 		cardpng8.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
-		cardpng8.setBounds(792, 324, 59, 216);
+		cardpng8.setBounds(637, 324, 38, 216);
 		contentPane.add(cardpng8);
+		
+		JLabel cardpng9 = new JLabel("New label");
+		cardpng9.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
+		cardpng9.setBounds(685, 324, 38, 216);
+		contentPane.add(cardpng9);
+		
+		JLabel cardpng10 = new JLabel("New label");
+		cardpng10.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
+		cardpng10.setBounds(733, 324, 38, 216);
+		contentPane.add(cardpng10);
+		
+		JLabel cardpng11 = new JLabel("New label");
+		cardpng11.setIcon(new ImageIcon(gametable.class.getResource("/iamge/icon1.png")));
+		cardpng11.setBounds(781, 324, 38, 216);
+		contentPane.add(cardpng11);
 	}
 }
