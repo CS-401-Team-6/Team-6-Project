@@ -27,10 +27,18 @@ public class Game
     	return this.players;
     }
     
-    public User activePlayer() {
-    	for (int i = 0; i < players.size(); i++) {
-    		if (players.get(i).getStatus().equals(STATUS.ACTIVE))
-    			return players.get(i);
+    public User activePlayer() 
+    {	
+    	int i = 0;
+    	for (i = 0; i < players.size(); i++) 
+    	{
+    		if (players.get(i).getStatus())
+    		{
+    			break;
+    		}
     	}
+    	
+    	return players.get(i);
     }
 }
+

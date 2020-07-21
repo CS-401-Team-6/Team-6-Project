@@ -4,7 +4,7 @@ public class User
     private byte[] password;
     private int bank;
     private Hand hand;
-    private STATUS status;
+    private boolean status;
     
     public User(String usn, byte[] pass)
     {
@@ -54,8 +54,20 @@ public class User
     	this.hand = hand;
     }
     
-    public void setStatus(STATUS s) {
+    public void setStatus(boolean s) {
     	this.status = s;
+    }
+    
+    public void swapStatus()
+    {
+    	if(this.status)
+    	{
+    		this.status = false;
+    	}
+    	else
+    	{
+    		this.status = true;
+    	}
     }
     
     public int calculateScore()
@@ -89,7 +101,7 @@ public class User
     	return this.hand;
     }
     
-    public STATUS getStatus() {
+    public boolean getStatus() {
     	return this.status;
     }
 }
