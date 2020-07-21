@@ -112,7 +112,6 @@ public class Hand
 		return this.bet;
 	}
 	
-	
 	public int getScore()
 	{
 		return this.score;
