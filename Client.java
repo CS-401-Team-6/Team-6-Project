@@ -77,43 +77,27 @@ public class Client {
         
         Cipher clientCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         clientCipher.init(Cipher.ENCRYPT_MODE, clientAesKey);
-        byte[] cleartext = "This is just an example".getBytes();
-     
-        byte[] ciphertext = encrypt(cleartext, clientCipher);
-        
+  
         byte[] encodedParams = clientCipher.getParameters().getEncoded();
         objectOutputStream.writeObject(encodedParams);
         
-        objectOutputStream.writeObject(ciphertext);
-        
+    	Login userlogin = new Login(objectOutputStream, objectInputStream, clientCipher);
+		userlogin.login();
 
-        // List of Message objects
-        List<Message> messages = new ArrayList<>();
-        byte[] textBytes = new String("client").getBytes();
-        byte[] textCipher = clientCipher.doFinal(textBytes);
-       
-        System.out.println(bytesToHex(oneWayHash("Michael", "Password")));
-        System.out.println(bytesToHex(oneWayHash("Mike", "Password")));
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        String salted = "Michael/Password";
-        System.out.println(bytesToHex( digest.digest(salted.getBytes(StandardCharsets.UTF_8))));
-        
-        
-        
-        Message login = new Message("login",  textCipher, "Login packet");
-        
-        messages.add(login);
-        System.out.println("Sending Message Objects");
-        objectOutputStream.writeObject(messages);
-        
-
-       
-        
+		//TABLE GUI HERE
+		//
+		//GAME LOGIC IN GUI
+		//BOOLEAN:loggedin 
+		/*while(loggedin)
+        	  GameMessage gameMessage =  objectInputStream.readObject();
+        	  if(gameMessage.getType() == "ACT")
+        	  		//SEND MESSAGE BASED ON ACTION INPUT      
+        */
         	System.out.println("Closing socket");
-        	socket.close();
+        	//socket.close();
     }
     
-    private static byte[] oneWayHash(String username, String password) throws NoSuchAlgorithmException
+    public static byte[] oneWayHash(String username, String password) throws NoSuchAlgorithmException
     {
     	
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -122,7 +106,7 @@ public class Client {
     }
     
     
-    private static String bytesToHex(byte[] hash) {
+    public static String bytesToHex(byte[] hash) {
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < hash.length; i++) {
         String hex = Integer.toHexString(0xff & hash[i]);
@@ -131,6 +115,7 @@ public class Client {
         }
         return hexString.toString();
     }
+    
     
     
     
