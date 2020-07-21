@@ -25,10 +25,13 @@ public class MessageProcessor {
 		//If the last player is reached, we loop back to the first player and set them as active
 			//Also triggers a newRound = true boolean to let players into the game
 		int index = game.getPlayers().indexOf(game.activePlayer() + 1);
-		if (index >= 0 && index <= 4)
-			game.getPlayers().get(index).setStatus(STATUS.ACTIVE);
+		if (index >= 0 && index <= 4) {
+			game.activePlayer().setStatus(false);
+			game.getPlayers().get(index).setStatus(true);
+		}
 		if (game.activePlayer().equals(game.getPlayers().get(game.getPlayers().size() - 1))) {
-			game.setActivePlayer(game.getPlayers().get(0));
+			game.activePlayer().setStatus(false);
+			game.getPlayers().get(0).setStatus(true);
 			game.setNewRound(true);
 		}
 		message.setGame(game);
