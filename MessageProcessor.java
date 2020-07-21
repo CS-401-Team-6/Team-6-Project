@@ -6,7 +6,6 @@ public class MessageProcessor {
 	//A message object will be returned back
 	
 	public Message process(Message message, Game game) {
-		//Index will be the player number
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
 			game.activePlayer().getHand().hit(deck.topDrawCard());
