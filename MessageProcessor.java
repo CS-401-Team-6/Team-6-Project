@@ -5,10 +5,11 @@ public class MessageProcessor {
 	//process will perform different actions within the server
 	//A message object will be returned back
 	
-	public Message process(Message message, User user, Deck deck) {
+	public Message process(Message message, Game game) {
+		//Index will be the player number
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
-			user.getHand().hit(deck.topDrawCard());
+			game.activePlayer().getHand().hit(deck.topDrawCard());
 			message.setStatus("HitSuccess");
 		}
 		else if (message.getType().equals("STAND")) {
@@ -17,11 +18,24 @@ public class MessageProcessor {
 		}
 		else if (message.getType().equals("BET")) {
 			//Creates a bet for the user's hand
-			user.setBet(Integer.parseInt(message.getText()));
+			game.activePlayer().setBet(Integer.parseInt(message.getText()));
 			message.setStatus("BetSuccess");
 		}
 		else
 			System.out.println("INVALID ACTION");
+		
+		//After message has been processed, we need to change the active user
+		//If the last player is reached, we loop back to the first player and set them as active
+			//Also triggers a newRound = true boolean to let players into the game
+		int index = game.getPlayers().indexOf(game.activePlayer() + 1);
+		if (index >= 0 && index <= 4)
+			game.setActivePlayer(game.getPlayers().get(index));
+		if (game.activePlayer().equals(game.getPlayers().get(game.getPlayers().size() - 1))) {
+			game.setActivePlayer(game.getPlayers().get(0));
+			game.setNewRound(true);
+		}
+		
+		message.setGame(game);
 		return message;
 	}
 }

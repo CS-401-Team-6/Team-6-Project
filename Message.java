@@ -7,17 +7,20 @@ public class Message implements Serializable{
     protected String type;
     protected String status;
     protected String text;
+    protected Game game;
    
-    public Message(){
+    public Message() {
         this.type = "Undefined";
         this.status = "Undefined";
         this.text = "Undefined";
+        this.game = null;
     }
    
-    public Message(String type, String status, String text){
+    public Message(String type, String status, String text, Game game) {
     	this.type = type;
     	this.status = status;
     	this.text = text;
+    	this.game = game;
     }
    
 	public String getType() {
@@ -27,6 +30,7 @@ public class Message implements Serializable{
 	public void setType(String type) {
 		this.type = type;
 	}
+	
 	public String getStatus() {
 		return status;
 	}
@@ -41,6 +45,14 @@ public class Message implements Serializable{
 
 	public void setText(String text) {
 		this.text = text;
+	}
+	
+	public Game getGame() {
+		return game;
+	}
+	
+	public void setGame (Game game) {
+		this.game = game;
 	}
     
 }
