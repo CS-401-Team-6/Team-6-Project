@@ -46,8 +46,7 @@ public class Login {
 	private ObjectOutputStream objectOutputStream;
 	private ObjectInputStream objectInputStream;
 	private Cipher clientCipher;
-	private List<Message> messages = new ArrayList<>();
-	private Message messageIn;
+	private ConnectionMessage messageIn;
 
 
 	/**
@@ -123,19 +122,19 @@ public class Login {
 					System.out.println(Client.bytesToHex(hash));
 					encryptedHash = clientCipher.doFinal(hash);
 					System.out.println(Client.bytesToHex(encryptedHash));
-					System.out.println(messages.size());
-					objectOutputStream.writeObject(new Message("login", encryptedHash, usid));
-					messageIn =  (Message) objectInputStream.readObject();
+					objectOutputStream.writeObject(new ConnectionMessage("login", encryptedHash, usid));
+					messageIn =  (ConnectionMessage) objectInputStream.readObject();
 					if (messageIn.getType().contentEquals("login"))
 						{
 						if (messageIn.getText().equals("/NO USER"))
 							JOptionPane.showMessageDialog(frame, "No such user name exists...");
 						else if (messageIn.getText().equals("/INVALID PASS"))
 							JOptionPane.showMessageDialog(frame, "Invalid password");
-						else if  (messageIn.getText().equals("/SUCCESS"))
+						else if  (messageIn.getText().equals("/SUCCESS")) {
 							JOptionPane.showMessageDialog(frame, "Welcome back " + usid);
-							//CALL TO GAME GUI
-					
+							gametable gameTable = new gametable(objectOutputStream, objectInputStream);
+							gameTable.runTable(objectOutputStream, objectInputStream);
+						}
 						}
 				} catch (IllegalBlockSizeException e1) {
 					// TODO Auto-generated catch block

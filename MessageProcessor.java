@@ -1,40 +1,39 @@
-import client.Message;
 
 public class MessageProcessor {
 	//This class will take in a message and depending on the type,
 	//process will perform different actions within the server
-	//A message object will be returned back, possibly more...
+	//A message object will be returned back
 	
-	//EDIT: Might change return variable to void and just send directly back using ObjectOutputStream
-	//EDIT: Instead of passing in User and Deck, we can also pass in Game instead, however
-			//we would have to know which player to draw the deck for.
-	public Message process(Message message, User user, Deck deck) {
-        // get the input stream from the connected socket
-        // create an ObjectInputStream so we can read data from it.
-		//EDIT: These will either be passed in as a parameter or created here.
+	public Message process(Message message, Game game) {
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
-			user.hand.hit();
-			message.setStatus("Success");
-			//EDIT: Use ObjectOutputStream to send objects back.
-		}
-		else if (message.getType().equals("DOUBLE DOWN")) {
-			//Double the player's bet amount, draw a card and place in player's hand
-			//EDIT: Double player bet amount
-			user.hand.hit();
-			message.setStatus("Success");
-			//EDIT: Use ObjectOutputStream to send objects back.
-		}
-		else if (message.getType().equals("SPLIT")) {
-			//Should already be checked if split is available back in client
-			//Create a new hand by sending one of the cards over and drawing a second card for each hand
-			//The betting amount for the second hand will be equal to the starting bet
+			game.activePlayer().getHand().hit(deck.topDrawCard());
+			message.setStatus("HitSuccess");
 		}
 		else if (message.getType().equals("STAND")) {
 			//Do nothing
+			message.setStatus("StandSuccess");
+		}
+		else if (message.getType().equals("BET")) {
+			//Creates a bet for the user's hand
+			game.activePlayer().setBet(Integer.parseInt(message.getText()));
+			message.setStatus("BetSuccess");
 		}
 		else
 			System.out.println("INVALID ACTION");
+		
+		//After message has been processed, we need to change the active user
+		//If the last player is reached, we loop back to the first player and set them as active
+			//Also triggers a newRound = true boolean to let players into the game
+		int index = game.getPlayers().indexOf(game.activePlayer() + 1);
+		if (index >= 0 && index <= 4)
+			game.setActivePlayer(game.getPlayers().get(index));
+		if (game.activePlayer().equals(game.getPlayers().get(game.getPlayers().size() - 1))) {
+			game.setActivePlayer(game.getPlayers().get(0));
+			game.setNewRound(true);
+		}
+		
+		message.setGame(game);
 		return message;
 	}
 }
