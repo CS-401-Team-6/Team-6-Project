@@ -36,7 +36,7 @@ public class Hand
 		Card c;
 		for(i = 0; i < this.cards.size(); i++)
 		{
-			c = this.cards.get(0);
+			c = this.cards.get(i);
 			v = c.valueToInt();
 			if(v == 1)
 			{

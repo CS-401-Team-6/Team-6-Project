@@ -25,7 +25,7 @@ public class User
     public void setPassword(byte[] pass)
     {
     	this.password = pass;
-    }
+    } 
     
     public void setBank(int money)
     {
@@ -51,6 +51,12 @@ public class User
     public void setHand(Hand hand)
     {
     	this.hand = hand;
+    }
+    
+    public int calculateScore()
+    {
+    	this.hand.calculateScore();
+    	return this.hand.getScore();
     }
     
     public String getUsername()
