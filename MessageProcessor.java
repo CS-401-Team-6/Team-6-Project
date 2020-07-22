@@ -6,7 +6,7 @@ public class MessageProcessor {
 	public Message process(Message message, Game game) {
 		if (message.getType().equals("HIT")) {
 			//Draw a card from the deck for the player
-			game.activePlayer().getHand().hit(deck.topDrawCard());
+			game.activePlayer().getHand().hit(game.getDeck().topDrawCard());
 			message.setStatus("HitSuccess");
 		}
 		else if (message.getType().equals("STAND")) {
@@ -24,7 +24,7 @@ public class MessageProcessor {
 		//After message has been processed, we need to change the active user
 		//If the last player is reached, we loop back to the first player and set them as active
 			//Also triggers a newRound = true boolean to let players into the game
-		int index = game.getPlayers().indexOf(game.activePlayer() + 1);
+		int index = game.getPlayers().indexOf(game.activePlayer()) + 1;
 		if (index >= 0 && index <= 4) {
 			game.activePlayer().setStatus(false);
 			game.getPlayers().get(index).setStatus(true);
@@ -36,7 +36,6 @@ public class MessageProcessor {
 		}
 		message.setGame(game);
 		return message;
-		
 		
 	}
 }
