@@ -1,4 +1,8 @@
-public class Dealer 
+package server;
+
+import java.io.Serializable;
+
+public class Dealer implements Serializable
 {
     private Hand hand;
     

@@ -100,7 +100,7 @@ public class Client {
 		
 		
 		
-        	System.out.println("Closing socket");
+        	System.out.println("Connection confirmed");
         	//socket.close();
     }
     

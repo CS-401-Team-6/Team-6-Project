@@ -1,4 +1,8 @@
-public class Card 
+package server;
+
+import java.io.Serializable;
+
+public class Card implements Serializable
 {
 	private VALUE value;
 	private SUIT suit;

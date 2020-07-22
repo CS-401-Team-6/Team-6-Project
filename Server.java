@@ -30,7 +30,6 @@ import javax.crypto.spec.SecretKeySpec;
 
 import client.Client;
 import client.ConnectionMessage;
-import client.Message;
 
 //Server Class, Michael Maddux
 //Contains the main method for the server machine
@@ -237,6 +236,7 @@ private static class ThreadServer implements Runnable {
 							}
 							else {
 								String decrypted = bytesToHex(decrypt(msg.getStatus(), serverCipher));
+								System.out.println("ENCRYPTED: " + bytesToHex(msg.getStatus()));
 								System.out.println("DECRYPTED: " + decrypted);
 								System.out.println("ON FILE: " + users.get(msg.getText()).getPass());
 								if (!users.get(msg.getText()).getPass().equals(decrypted))
@@ -249,23 +249,35 @@ private static class ThreadServer implements Runnable {
 									secWrite("secLog","LOGIN OF " + msg.getText() + "COMPLETE");
 									user = users.get(msg.getText());
 									if(games.isEmpty())
-									 games.add(new Game());
-									boolean allFull = true;
-									int gamesLen = games.size();
-									for(int i=0; i<gamesLen; i++) {
-									    if (!games.get(i).isFull())									 
-									    	{
-									    	gameInstance = games.get(i);
-									    	games.get(i).addPlayer(user);
-									    	allFull = false;
-									    	break;
-									    	}
-										}    
-									if(allFull)
-										games.add(new Game());
-										gameInstance = games.get(games.size()- 1);
-										games.get(games.size()-1).addPlayer(user);
+										{
+										System.out.println("Creating new game");
+									 	games.add(new Game(user));
+									 	gameInstance = games.get(0);
+										}
+									//Change to detect if needed to create new game instance
+									else {
+										boolean placed = false;
+										for(int i = 0; i < games.size(); i++)
+										{
+											if (!games.get(i).isFull())
+											{
+												games.get(i).addPlayerToWait(user);
+												gameInstance = games.get(i);
+												placed = true;
+												break;
+											}
+										}
+										if (!placed)
+											{
+											games.add(new Game(user));
+											gameInstance = games.get(games.size() -1);
+											}
+									}
 										
+									
+									System.out.println("GAME RUN");
+									gameRun(objectOutputStream, objectInputStream);
+						
 								}
 							}
 						}
@@ -282,7 +294,7 @@ private static class ThreadServer implements Runnable {
 				}
         } 
         catch (Exception e) {
-        	System.out.println("Error with sockets");
+       System.out.println("Error with sockets");
         }
         finally {
             try {
@@ -294,47 +306,67 @@ private static class ThreadServer implements Runnable {
 }
 	   
     //BASIC GAME LOGIC
-    private void gameRun(ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream)
+    private void gameRun(ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException, InterruptedException
     {
+    	MessageProcessor mp = new MessageProcessor();
     	boolean logout = false;
-    	boolean update = true;
-    	User currentUser = gameInstance.activePlayer();
+    	int gameUpdate = -1;
+
+    	
+    	User currentUser = gameInstance.getActivePlayer();
+ System.out.println("In GAME RUN 1");
     	while (!logout)
     	{
-    		if(currentUser.equals(user) && update)
+    		if(user.equals(gameInstance.getActivePlayer()) )
     		{
-    			objectOutputStream.writeObject(new Message("ACTIVE", gameInstance));
+    			objectOutputStream.writeObject(new Message("ACTIVE", "SENT", "SENT", gameInstance));
     			Message userAction = (server.Message) objectInputStream.readObject();
-    			MessageProcessor.process(userAction, user, gameInstance);
+    			while(!userAction.getType().contentEquals("DONE")) {
+    				System.out.println(userAction.getType());
+    				objectOutputStream.reset();
+    				objectOutputStream.writeObject(mp.process(userAction, gameInstance));
+    				objectOutputStream.reset();
+    				System.out.println(gameInstance.toString());
+    				userAction = (server.Message) objectInputStream.readObject();
+    			}
+    			Message done = mp.process(userAction, gameInstance);
+    			if(!done.getType().equals("FINISH"))
+    			{
+    				gameInstance.nextActivePlayer();
+    				objectOutputStream.reset();
+    				objectOutputStream.writeObject(done);
+    			}
+    			else if(done.getType().equals("FINISH"))
+    			{
+    				objectOutputStream.reset();
+    				objectOutputStream.writeObject(done);
+    				Thread.sleep(300);
+    				userAction = (server.Message) objectInputStream.readObject();
+    				objectOutputStream.writeObject(mp.process(userAction, gameInstance));
+    				objectOutputStream.reset();
+    			}
     		}
-    		else
+    		else if(!gameInstance.getActivePlayer().equals(user))
     		{
-    			objectOutputStream.writeObject(new GameMessage("WAIT", gameInstance.getStatus()));	
+    			if(!(gameUpdate==gameInstance.getUpdate()))
+    			{
+    				if(gameInstance.getFinishRound())
+    						{
+    					objectOutputStream.writeObject(new Message("RESULTS", gameInstance));
+    	    			objectOutputStream.reset();	
+    						}
+    				else {
+    					objectOutputStream.writeObject(new Message("WAIT", gameInstance));
+    				objectOutputStream.reset();	
+    				gameUpdate=gameInstance.getUpdate();
+    				}
+    			}
     		}
-    		Thread.sleep(500);
-    		if (currentUser.equals(gameInstance.activePlayer()))
-    				update = false;
-    		else
-    		{
-    			update = true;
-    			currentUser = gameInstance.activePlayer());
-    		}
-    	}
+
+    		Thread.sleep(200);
+    }
     }
     
-    
-    private static byte[] encrypt(byte[] cleartext, Cipher cipher)
-    {
-    	byte[] ciphertext = null;
-    	 try {
-			ciphertext = cipher.doFinal(cleartext);
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		}
-		return ciphertext;
-    }
     
     private static byte[] decrypt(byte[] ciphertext, Cipher cipher)
     {

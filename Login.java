@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.JComboBox;
 import javax.swing.JTextPane;
 
+import server.Message;
 import server.User;
 
 import java.awt.Color;
@@ -130,8 +131,8 @@ public class Login {
 							JOptionPane.showMessageDialog(frame, "Invalid password");
 						else if  (messageIn.getText().equals("/SUCCESS")) {
 							JOptionPane.showMessageDialog(frame, "Welcome back " + usid);
-							gametable gameTable = new gametable(objectOutputStream, objectInputStream);
-							gameTable.runTable(objectOutputStream, objectInputStream);
+							ConsoleRun consoleRun = new ConsoleRun(objectOutputStream, objectInputStream, usid);
+							consoleRun.consoleGameRun();
 						}
 						}
 				} catch (IllegalBlockSizeException e1) {

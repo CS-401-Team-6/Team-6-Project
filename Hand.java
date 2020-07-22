@@ -1,8 +1,8 @@
+package server;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-import project.Card;
-
-public class Hand 
+public class Hand implements Serializable
 {
 	private ArrayList<Card> cards = new ArrayList<Card>();
 	private int score;
@@ -43,7 +43,7 @@ public class Hand
 			if(v == 1)
 			{
 				ace++;
-				continue;
+				this.score -=v;
 			}
 			this.score += v;
 		}
@@ -80,7 +80,7 @@ public class Hand
 	}
 	
 	//remove every card, return as an arraylist
-	public ArrayList<Card> emptyHand()
+	public void emptyHand()
 	{
 		ArrayList<Card> temp = new ArrayList<Card>();
 		while(cards.size() > 0)
@@ -89,7 +89,7 @@ public class Hand
 		}
 		
 		this.resetScore();
-		return temp;
+		return;
 	}
 	
 	public void resetScore()
@@ -112,6 +112,7 @@ public class Hand
 		return this.bet;
 	}
 	
+	
 	public int getScore()
 	{
 		return this.score;
@@ -122,8 +123,13 @@ public class Hand
 		return this.cards.size();
 	}
 	
-	public ArrayList<Card> getCards()
-	{
-		return this.cards;
-	}
+	public String toString() {
+		 StringBuilder build = new StringBuilder();
+		    	cards.forEach(card ->
+		    	{
+		    		build.append(card.valueToString() + card.getSuit() +" ");
+		    	});
+		    	return build.toString();
+		}
+	
 }
