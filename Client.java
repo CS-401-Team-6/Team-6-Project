@@ -39,7 +39,7 @@ public class Client {
         // create a ObjectInputStream so we can read data from it.
         ObjectInputStream objectInputStream = new ObjectInputStream(inputStream);
 
-        //DIFFIE
+        //DIFFIE HELLMAN initialization
         System.out.println("Generating DH key pair:");
         KeyPairGenerator clientKeyPairGen = KeyPairGenerator.getInstance("DH");
         clientKeyPairGen.initialize(1024);
@@ -50,60 +50,46 @@ public class Client {
         KeyAgreement clientKeyAgree = KeyAgreement.getInstance("DH");
         clientKeyAgree.init(clientKeyPair.getPrivate());
     
-        // Client encodes  public key, and sends it Server
+        // Client encodes  public key and sends it Server
         byte[] clientPublicKeyEncoded = clientKeyPair.getPublic().getEncoded();
         objectOutputStream.writeObject(clientPublicKeyEncoded);
 
-        //* Client instantiates a DH public key from encoded Server material
+        // Client instantiates a DH public key from encoded Server material
         // Client uses Server public key
         
         byte[] serverPublicKeyEnc =  (byte[]) objectInputStream.readObject();
         
-        
-        KeyFactory clientKeyFac = KeyFactory.getInstance("DH");
+        //After doPhase(), key ready to use
+	KeyFactory clientKeyFac = KeyFactory.getInstance("DH");
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(serverPublicKeyEnc);
         PublicKey serverPubKey = clientKeyFac.generatePublic(x509KeySpec);
         System.out.println("Client:  PHASE1 ...");
         clientKeyAgree.doPhase(serverPubKey, true);
 
-      
-            byte[] clientSharedSecret = clientKeyAgree.generateSecret();
-            objectOutputStream.writeObject(clientSharedSecret);
+      	//Generate a shared secret
+        byte[] clientSharedSecret = clientKeyAgree.generateSecret();
+        objectOutputStream.writeObject(clientSharedSecret);
           
         System.out.println("Client Length" + clientSharedSecret.length);
     
+	//Use the shared secret to instantiate an AES key
         System.out.println("Use shared secret as SecretKey object ...");
         SecretKeySpec clientAesKey = new SecretKeySpec(clientSharedSecret, 0, 16, "AES");
-        
+     	//Initialize cipher
         Cipher clientCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         clientCipher.init(Cipher.ENCRYPT_MODE, clientAesKey);
-  
+  	//Send cipher parameters to server
         byte[] encodedParams = clientCipher.getParameters().getEncoded();
         objectOutputStream.writeObject(encodedParams);
-        
+	//Call to user login GUI 
     	Login userlogin = new Login(objectOutputStream, objectInputStream, clientCipher);
-		userlogin.login();
+	userlogin.login();
 		
 		
-		
-		
-
-		//TABLE GUI HERE
-		//
-		//GAME LOGIC IN GUI
-		//BOOLEAN:loggedin 
-		/*while(loggedin)
-        	  GameMessage gameMessage =  objectInputStream.readObject();
-        	  if(gameMessage.getType() == "ACT")
-        	  		//SEND MESSAGE BASED ON ACTION INPUT      
-        */
-		
-		
-		
-        	System.out.println("Connection confirmed");
-        	//socket.close();
+	System.out.println("Connection confirmed");
     }
     
+	//Helper function that takes two strings, combines them and returns the byte array of the SHA-256 one way hash
     public static byte[] oneWayHash(String username, String password) throws NoSuchAlgorithmException
     {
     	
@@ -112,21 +98,8 @@ public class Client {
         return digest.digest(salted.getBytes(StandardCharsets.UTF_8));
     }
     
-    
-    public static String bytesToHex(byte[] hash) {
-        StringBuffer hexString = new StringBuffer();
-        for (int i = 0; i < hash.length; i++) {
-        String hex = Integer.toHexString(0xff & hash[i]);
-        if(hex.length() == 1) hexString.append('0');
-            hexString.append(hex);
-        }
-        return hexString.toString();
-    }
-    
-    
-    
-    
-    
+ 
+    //Helper function that encrypts a cleartext byte array given a predfiened cipher.
     
     private static byte[] encrypt(byte[] cleartext, Cipher cipher)
     {
@@ -140,21 +113,6 @@ public class Client {
 		}
 		return ciphertext;
     }
-    
-    private static byte[] decrypt(byte[] ciphertext, Cipher cipher)
-    {
-    	byte[] cleartext = null;
-    	 try {
-    		 cleartext = cipher.doFinal(ciphertext);
-		} catch (IllegalBlockSizeException e) {
-			e.printStackTrace();
-		} catch (BadPaddingException e) {
-			e.printStackTrace();
-		}
-		return cleartext;
-    }
-    
-    
     
     
 }

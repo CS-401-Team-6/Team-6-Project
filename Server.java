@@ -205,19 +205,23 @@ private static class ThreadServer implements Runnable {
        //from this point on will now be encrypted using AES using the shared secret.
 
        boolean connected = true;
+	//Process ConnectionMessages from Client
        while(connected) {
     	   ConnectionMessage msg = (ConnectionMessage) objectInputStream.readObject();
     	   System.out.println("Received message from: " + socket);
 					try {
 						byte[] encryptedMessage = serverCipher.doFinal(msg.getStatus());
+						//Register case
 						if(msg.getType().compareTo("register") == 0)
 							{
+							//User name taken
 							if (users.containsKey(msg.getText()))
 								{
 								objectOutputStream.writeObject(new ConnectionMessage("register", msg.getStatus(), "/FAIL"));
 								secWrite("secLog", "USER " +  msg.getText() +  " REGISTRATION FAILED, NAME ALREADY TAKEN");
 								}
 							else {
+							//Add new User to user map and user database
 							System.out.println("Current User Size:" + users.size());
 							System.out.println("Adding" + msg.getText());
 							users.put(msg.getText(), new User(msg.getText(), bytesToHex(encryptedMessage)));
@@ -227,34 +231,40 @@ private static class ThreadServer implements Runnable {
 							objectOutputStream.writeObject(new ConnectionMessage("register", msg.getStatus(), "/SUCCESS"));
 							}
 							}
+						//Login case
 						if(msg.getType().compareTo("login") == 0)
 						{
+							//User name does not exist case
 							if (!users.containsKey(msg.getText()))
 							{
 								objectOutputStream.writeObject(new ConnectionMessage("login", msg.getStatus(), "/NO USER"));
 								secWrite("secLog","LOGIN FAILED, NO USER " + msg.getText());
 							}
+							//User name does exist
 							else {
 								String decrypted = bytesToHex(decrypt(msg.getStatus(), serverCipher));
 								System.out.println("ENCRYPTED: " + bytesToHex(msg.getStatus()));
 								System.out.println("DECRYPTED: " + decrypted);
 								System.out.println("ON FILE: " + users.get(msg.getText()).getPass());
+								//Passwords do not match case
 								if (!users.get(msg.getText()).getPass().equals(decrypted))
 								{
 									objectOutputStream.writeObject(new ConnectionMessage("login", msg.getStatus(), "/INVALID PASS"));
 									secWrite("secLog","LOGIN FAILED, INVALID PASSWORD FOR " + msg.getText());
 								}
+								//Login success
 								else {
 									objectOutputStream.writeObject(new ConnectionMessage("login", msg.getStatus(), "/SUCCESS"));
 									secWrite("secLog","LOGIN OF " + msg.getText() + "COMPLETE");
 									user = users.get(msg.getText());
+									//If no active games, create a new one and add user
 									if(games.isEmpty())
 										{
 										System.out.println("Creating new game");
 									 	games.add(new Game(user));
 									 	gameInstance = games.get(0);
 										}
-									//Change to detect if needed to create new game instance
+									//Place a user in an empty game
 									else {
 										boolean placed = false;
 										for(int i = 0; i < games.size(); i++)
@@ -267,28 +277,24 @@ private static class ThreadServer implements Runnable {
 												break;
 											}
 										}
+										//If no empty games exist, create a new Game with the user		
 										if (!placed)
 											{
 											games.add(new Game(user));
 											gameInstance = games.get(games.size() -1);
 											}
 									}
-										
-									
+									//Run the game
 									System.out.println("GAME RUN");
 									gameRun(objectOutputStream, objectInputStream);
-						
 								}
 							}
 						}
 					} catch (IllegalBlockSizeException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (BadPaddingException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -305,22 +311,25 @@ private static class ThreadServer implements Runnable {
     }
 }
 	   
-    //BASIC GAME LOGIC
+    //Server side game logic
+    //
     private void gameRun(ObjectOutputStream objectOutputStream, ObjectInputStream objectInputStream) throws IOException, ClassNotFoundException, InterruptedException
     {
     	MessageProcessor mp = new MessageProcessor();
     	boolean logout = false;
+	//gameUpdate used to determine if a new game state should be sent. GameInstance holds an update int that increases when the game state changes
     	int gameUpdate = -1;
 
-    	
     	User currentUser = gameInstance.getActivePlayer();
- System.out.println("In GAME RUN 1");
     	while (!logout)
     	{
+		//Determines activePlayer from game. If equal to the user associated with this thread, sends the ACTIVE message, which 
+		//the client will read and begin the active player message sequence
     		if(user.equals(gameInstance.getActivePlayer()) )
     		{
     			objectOutputStream.writeObject(new Message("ACTIVE", "SENT", "SENT", gameInstance));
     			Message userAction = (server.Message) objectInputStream.readObject();
+			//Process messages until the Client is Done, either through Stand, Bust, or hitting 21.
     			while(!userAction.getType().contentEquals("DONE")) {
     				System.out.println(userAction.getType());
     				objectOutputStream.reset();
@@ -330,12 +339,14 @@ private static class ThreadServer implements Runnable {
     				userAction = (server.Message) objectInputStream.readObject();
     			}
     			Message done = mp.process(userAction, gameInstance);
+			//If the done message is not Finished, that means more players must still play. Set the next active player and continue.
     			if(!done.getType().equals("FINISH"))
     			{
     				gameInstance.nextActivePlayer();
     				objectOutputStream.reset();
     				objectOutputStream.writeObject(done);
     			}
+			//A FINISH Type in the done message means that is the last player and last action. Results should be sent out and a new round should begin.
     			else if(done.getType().equals("FINISH"))
     			{
     				objectOutputStream.reset();
@@ -346,19 +357,25 @@ private static class ThreadServer implements Runnable {
     				objectOutputStream.reset();
     			}
     		}
+		//For clients who are not the active player
     		else if(!gameInstance.getActivePlayer().equals(user))
-    		{
+    		{	
+			//If the local gameUpdate number does not equal the gameInstance update number, a new message must be sent
     			if(!(gameUpdate==gameInstance.getUpdate()))
     			{
+				//If the gameInstance is in the FinishRound stage, send the RESULTS message, so the client knows to display the results
     				if(gameInstance.getFinishRound())
     						{
     					objectOutputStream.writeObject(new Message("RESULTS", gameInstance));
-    	    			objectOutputStream.reset();	
+    	    				objectOutputStream.reset();	
     						}
+				//Else, send a WAIT packet with the gameInstance. Client will print new game state.
     				else {
     					objectOutputStream.writeObject(new Message("WAIT", gameInstance));
-    				objectOutputStream.reset();	
-    				gameUpdate=gameInstance.getUpdate();
+    					objectOutputStream.reset();	
+					//Since a gameInstance was sent, gameUpdate becomes the Update value of the gameInstance we just sent.
+					//No longer need to send this gameInstance, until another update is made
+    					gameUpdate=gameInstance.getUpdate();
     				}
     			}
     		}
@@ -367,7 +384,7 @@ private static class ThreadServer implements Runnable {
     }
     }
     
-    
+    //Helper function to decrypt encrypted ciphertext, given a predefined cipher.
     private static byte[] decrypt(byte[] ciphertext, Cipher cipher)
     {
     	byte[] cleartext = null;
@@ -381,6 +398,7 @@ private static class ThreadServer implements Runnable {
 		return cleartext;
     }
     
+    //Helper function to write to the end of the security log
     private void secWrite(String fileName, String textIn) throws IOException
     {
     	FileWriter fileWrite = new FileWriter(fileName, true);
@@ -390,7 +408,7 @@ private static class ThreadServer implements Runnable {
     	buffWrite.close();
     }
     
-    
+    //Helper function to convert an array of bytes into Hex values for visual processing
     public static String bytesToHex(byte[] hash) {
         StringBuffer hexString = new StringBuffer();
         for (int i = 0; i < hash.length; i++) {
